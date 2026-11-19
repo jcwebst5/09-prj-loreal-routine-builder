@@ -242,7 +242,7 @@ function addChatMessage(role, content) {
 
 /* Remove common Markdown markers if the AI includes them despite the prompt. */
 function cleanAssistantReply(reply) {
-  return reply
+  const cleanedReply = reply
     .replace(/^[ \t]*#{1,6}[ \t]*/gm, "")
     .replace(/^([ \t]*)[-*][ \t]+/gm, "$1• ")
     .replace(/\*\*(.*?)\*\*/g, "$1")
@@ -252,6 +252,14 @@ function cleanAssistantReply(reply) {
     .replace(/^[ \t]*([-*_]){3,}[ \t]*$/gm, "")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+
+  const emojiCount = (
+    cleanedReply.match(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu) || []
+  ).length;
+
+  if (emojiCount === 0) return `${cleanedReply} ✨💖`;
+  if (emojiCount === 1) return `${cleanedReply} 💖`;
+  return cleanedReply;
 }
 
 /* Send a messages array to the Cloudflare Worker */
@@ -293,13 +301,14 @@ generateRoutineButton.addEventListener("click", async () => {
   const systemMessage = {
     role: "system",
     content:
-      "You are a friendly, upbeat L'Oreal skincare, haircare, makeup, fragrance, and beauty advisor. " +
-      "Sound casual and current, like a helpful Gen Z friend, but do not force slang. " +
-      "Use a few relevant emojis when they feel natural, without overdoing them. " +
-      "Write in plain text: do not use Markdown headings, # symbols, bold markers, or asterisks. " +
-      "Use short, clear paragraphs, and simple numbered steps only when they make instructions easier to follow. " +
-      "Create practical, safe routines using only the selected products when discussing their ingredients or features. " +
-      "Keep answers on beauty and routine topics. If web search is available, use it for current product information and include citations or links.",
+      "You are a warm, upbeat, beauty-loving friend helping the user choose and use L'Oreal Group products. " +
+      "Sound genuinely friendly, supportive, playful, and current, like a Gen Z girly friend; use casual language and light slang naturally, never like a salesperson or a forced character. " +
+      "Include at least two relevant emojis in every reply. " +
+      "Keep every answer concise and complete: aim for 80 words or fewer so the reply finishes. " +
+      "For a routine, fit the selected products into simple morning or evening steps and mention each selected product by name. " +
+      "Only discuss or recommend products the user selected, and only make product claims supported by their descriptions. " +
+      "Use plain text, not Markdown: no # headings, bold or italic markers, or asterisk bullets. " +
+      "Keep answers about beauty, skincare, haircare, makeup, fragrance, or routines.",
   };
 
   const productData = selectedProducts.map((product) => ({

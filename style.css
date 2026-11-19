@@ -98,7 +98,8 @@ body {
   padding: 20px;
   font-size: 18px;
   line-height: 1.5;
-  height: 250px;
+  min-height: 250px;
+  max-height: min(60vh, 640px);
   overflow-y: auto;
   background: #fafafa;
   margin-bottom: 20px;
