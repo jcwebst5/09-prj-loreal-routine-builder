@@ -240,6 +240,20 @@ function addChatMessage(role, content) {
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
+/* Remove common Markdown markers if the AI includes them despite the prompt. */
+function cleanAssistantReply(reply) {
+  return reply
+    .replace(/^[ \t]*#{1,6}[ \t]*/gm, "")
+    .replace(/^([ \t]*)[-*][ \t]+/gm, "$1• ")
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/__(.*?)__/g, "$1")
+    .replace(/\*([^*\n]+)\*/g, "$1")
+    .replace(/_([^_\n]+)_/g, "$1")
+    .replace(/^[ \t]*([-*_]){3,}[ \t]*$/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 /* Send a messages array to the Cloudflare Worker */
 async function askWorker(messages) {
   if (!workerUrl) {
@@ -308,7 +322,7 @@ generateRoutineButton.addEventListener("click", async () => {
   generateRoutineButton.disabled = true;
 
   try {
-    const reply = await askWorker(conversationMessages);
+    const reply = cleanAssistantReply(await askWorker(conversationMessages));
     conversationMessages.push({ role: "assistant", content: reply });
     addChatMessage("assistant", reply);
   } catch (error) {
@@ -330,7 +344,7 @@ chatForm.addEventListener("submit", async (event) => {
   sendButton.disabled = true;
 
   try {
-    const reply = await askWorker(conversationMessages);
+    const reply = cleanAssistantReply(await askWorker(conversationMessages));
     conversationMessages.push({ role: "assistant", content: reply });
     addChatMessage("assistant", reply);
   } catch (error) {
