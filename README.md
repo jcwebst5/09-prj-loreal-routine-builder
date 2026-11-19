@@ -1,4 +1,17 @@
-# Project 9: L'Oréal Routine Builder
-L’Oréal is expanding what’s possible with AI, and now your chatbot is getting smarter. This week, you’ll upgrade it into a product-aware routine builder. 
+# Project 9: L'Oreal Routine Builder
 
-Users will be able to browse real L’Oréal brand products, select the ones they want, and generate a personalized routine using AI. They can also ask follow-up questions about their routine—just like chatting with a real advisor.
+L'Oreal is expanding what is possible with AI, and this app helps users browse
+real L'Oreal products, select items, generate a personalized routine, and ask
+follow-up questions.
+
+## Cloudflare Worker setup
+
+This project sends chat requests to a class-hosted Cloudflare Worker. Open
+`script.js` and set `workerUrl` to the URL provided in class:
+
+```js
+const workerUrl = "https://your-class-worker.workers.dev/";
+```
+
+Do not put an API key or secret in this repository. The Worker keeps the key
+secure and receives the `messages` array from the frontend.
