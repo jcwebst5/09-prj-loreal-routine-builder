@@ -306,9 +306,10 @@ generateRoutineButton.addEventListener("click", async () => {
       "Include at least two relevant emojis in every reply. " +
       "Keep every answer concise and complete: aim for 80 words or fewer so the reply finishes. " +
       "For a routine, fit the selected products into simple morning or evening steps and mention each selected product by name. " +
-      "Only discuss or recommend products the user selected, and only make product claims supported by their descriptions. " +
-      "Use plain text, not Markdown: no # headings, bold or italic markers, or asterisk bullets. " +
-      "Keep answers about beauty, skincare, haircare, makeup, fragrance, or routines.",
+      "Use the full conversation history to answer follow-up questions and connect them to the user's routine when relevant. " +
+      "Stay focused on the routine or beauty topics such as skincare, haircare, makeup, and fragrance. If asked about something unrelated, briefly and kindly steer the conversation back to beauty. " +
+      "Only recommend products the user selected, and only make claims about them that are supported by their descriptions. " +
+      "Use plain text, not Markdown: no # headings, bold or italic markers, or asterisk bullets.",
   };
 
   const productData = selectedProducts.map((product) => ({
